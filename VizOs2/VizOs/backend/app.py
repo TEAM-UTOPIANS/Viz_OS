@@ -228,10 +228,14 @@ def health_check():
         'message': 'VizOS API is running'
     })
 
-# Serve static files
+# Serve static files (exclude API routes)
 @app.route('/<path:filename>')
 def serve_static(filename):
     """Serve static files from frontend directory"""
+    # Don't serve API routes as static files
+    if filename.startswith('api/'):
+        from flask import abort
+        abort(404)
     return send_from_directory(frontend_dir, filename)
 
 if __name__ == '__main__':

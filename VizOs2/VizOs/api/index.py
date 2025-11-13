@@ -18,6 +18,6 @@ if project_root not in sys.path:
 from backend.app import app
 
 # Vercel expects the app to be exported as 'handler'
-# The @vercel/python builder will automatically wrap this Flask app
+# The @vercel/python builder will automatically wrap this Flask app as WSGI
 handler = app
 
