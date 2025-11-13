@@ -17,7 +17,6 @@
       "includeFiles": "backend/**"
     }
   },
-  "outputDirectory": ".",
   "headers": [
     {
       "source": "/api/(.*)",
