@@ -14,8 +14,19 @@
   ],
   "functions": {
     "api/index.py": {
-      "includeFiles": ["backend/**", "frontend/**"]
+      "includeFiles": "backend/**"
     }
-  }
+  },
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "Access-Control-Allow-Origin",
+          "value": "*"
+        }
+      ]
+    }
+  ]
 }
 
