@@ -10,7 +10,7 @@ import os
 # Add parent directory to path for imports
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '../..'))
 
-from src.backend.controllers import scheduling_controller, memory_controller, deadlock_controller
+from backend.controllers import scheduling_controller, memory_controller, deadlock_controller
 
 # Create blueprint
 bp = Blueprint('api', __name__)

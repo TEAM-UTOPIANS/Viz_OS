@@ -9,7 +9,7 @@ import os
 # Add parent directory to path for imports
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '../..'))
 
-from src.algorithms import FCFS, SJF, Priority, RoundRobin
+from algorithms import FCFS, SJF, Priority, RoundRobin
 
 def fcfs(processes):
     """

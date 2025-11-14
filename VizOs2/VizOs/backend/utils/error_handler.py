@@ -3,7 +3,7 @@ Error Handler
 Utility functions for handling errors
 """
 
-from src.backend.utils.response_formatter import error
+from backend.utils.response_formatter import error
 
 def validation_error(message, details=None):
     """Return validation error response"""

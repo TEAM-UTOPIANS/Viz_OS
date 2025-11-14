@@ -10,8 +10,8 @@ import os
 # Add parent directory to path for imports
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '../..'))
 
-from src.backend.services import scheduler_service
-from src.backend.utils import response_formatter, error_handler
+from backend.services import scheduler_service
+from backend.utils import response_formatter, error_handler
 
 def fcfs(request):
     """
