@@ -14,7 +14,8 @@
   ],
   "functions": {
     "api/index.py": {
-      "includeFiles": "backend/**"
+      "includeFiles": "backend/**",
+      "memory": 1024
     }
   },
   "headers": [

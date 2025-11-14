@@ -15,22 +15,24 @@ if project_root not in sys.path:
 # Import Flask app
 try:
     from backend.app import app
-    handler = app
 except Exception as e:
     # If import fails, create a minimal error handler
     from flask import Flask, jsonify
-    error_app = Flask(__name__)
+    app = Flask(__name__)
     
-    @error_app.route('/', defaults={'path': ''})
-    @error_app.route('/<path:path>')
+    @app.route('/', defaults={'path': ''})
+    @app.route('/<path:path>')
     def error(path):
         return jsonify({
             'error': 'Import failed',
             'message': str(e),
             'type': type(e).__name__,
             'project_root': project_root,
-            'current_dir': current_dir
+            'current_dir': current_dir,
+            'sys_path': sys.path
         }), 500
-    
-    handler = error_app
+
+# Export the Flask app as the handler
+# Vercel Python runtime will automatically wrap this as a serverless function
+handler = app
 
