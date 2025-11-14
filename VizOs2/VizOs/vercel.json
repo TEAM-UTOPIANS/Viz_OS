@@ -4,6 +4,10 @@
     {
       "src": "api/index.py",
       "use": "@vercel/python"
+    },
+    {
+      "src": "api/test.py",
+      "use": "@vercel/python"
     }
   ],
   "routes": [
@@ -21,6 +25,10 @@
       "includeFiles": "backend/**",
       "memory": 1024,
       "maxDuration": 30
+    },
+    "api/test.py": {
+      "memory": 512,
+      "maxDuration": 10
     }
   },
   "public": false,
