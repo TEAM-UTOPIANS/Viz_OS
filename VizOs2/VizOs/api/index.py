@@ -15,8 +15,10 @@ if project_root not in sys.path:
 # Import Flask app
 try:
     from backend.app import app
+    print(f"Successfully imported Flask app from backend.app")
 except Exception as e:
     # If import fails, create a minimal error handler
+    import traceback
     from flask import Flask, jsonify
     app = Flask(__name__)
     
@@ -29,10 +31,11 @@ except Exception as e:
             'type': type(e).__name__,
             'project_root': project_root,
             'current_dir': current_dir,
-            'sys_path': sys.path
+            'sys_path': sys.path,
+            'traceback': traceback.format_exc()
         }), 500
+    print(f"Failed to import Flask app: {e}")
 
-# Export the Flask app as the handler
-# Vercel Python runtime will automatically wrap this as a serverless function
+# Vercel Python runtime expects the handler to be the Flask app
+# The Flask app (WSGI application) will be automatically wrapped by Vercel
 handler = app
-
