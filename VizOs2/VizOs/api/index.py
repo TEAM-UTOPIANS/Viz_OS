@@ -4,24 +4,33 @@ Vercel serverless function wrapper for Flask app
 import sys
 import os
 
-# Get the project root (parent of api directory)
-# In Vercel, __file__ will be in /var/task/api/index.py
-project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+# Get the project root directory
+current_dir = os.path.dirname(os.path.abspath(__file__))
+project_root = os.path.dirname(current_dir)
 
-# Add the project root to the path first
+# Add project root to Python path
 if project_root not in sys.path:
     sys.path.insert(0, project_root)
 
-# Change to project root to ensure relative paths work correctly
+# Import Flask app
 try:
-    os.chdir(project_root)
-except:
-    pass  # If chdir fails, continue anyway
-
-# Import the Flask app
-from backend.app import app
-
-# Vercel expects the app to be exported as 'handler'
-# The @vercel/python builder will automatically wrap this Flask app as WSGI
-handler = app
+    from backend.app import app
+    handler = app
+except Exception as e:
+    # If import fails, create a minimal error handler
+    from flask import Flask, jsonify
+    error_app = Flask(__name__)
+    
+    @error_app.route('/', defaults={'path': ''})
+    @error_app.route('/<path:path>')
+    def error(path):
+        return jsonify({
+            'error': 'Import failed',
+            'message': str(e),
+            'type': type(e).__name__,
+            'project_root': project_root,
+            'current_dir': current_dir
+        }), 500
+    
+    handler = error_app
 
