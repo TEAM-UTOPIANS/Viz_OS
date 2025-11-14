@@ -13,11 +13,11 @@
   "routes": [
     {
       "src": "/hello/(.*)",
-      "dest": "/api/hello.py"
+      "dest": "api/hello.py"
     },
     {
       "src": "/(.*)",
-      "dest": "/api/index.py"
+      "dest": "api/index.py"
     }
   ],
   "functions": {
