@@ -15,7 +15,6 @@ app = Flask(__name__)
 try:
     from backend.app import app as backend_app
     app = backend_app
-    print("Using backend app")
 except Exception as e:
     # Fallback error handler
     @app.route('/', defaults={'path': ''})
@@ -27,7 +26,6 @@ except Exception as e:
             'message': str(e),
             'traceback': traceback.format_exc()
         }), 500
-    print(f"Import error: {e}")
 
-# Export handler for Vercel
+# Export handler for Vercel - MUST be defined
 handler = app
