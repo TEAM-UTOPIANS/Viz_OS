@@ -4,7 +4,7 @@ Vercel serverless function wrapper for Flask app
 import sys
 import os
 
-# Import Flask first to ensure it's available
+# Import Flask FIRST to ensure it's always available
 from flask import Flask, jsonify
 
 # Get the project root directory
@@ -15,44 +15,35 @@ project_root = os.path.dirname(current_dir)
 if project_root not in sys.path:
     sys.path.insert(0, project_root)
 
-# Initialize Flask app first (always available)
-app = Flask(__name__)
-
-# Try to import and use the backend app
+# Try to import the backend app
+app = None
 try:
-    from backend.app import app as backend_app
-    # Copy routes from backend app to our app
-    for rule in backend_app.url_map.iter_rules():
-        app.add_url_rule(
-            rule.rule,
-            endpoint=rule.endpoint,
-            view_func=backend_app.view_functions[rule.endpoint],
-            methods=rule.methods
-        )
-    print("Successfully imported and registered backend routes")
+    from backend.app import app
+    print("Successfully imported Flask app from backend.app")
 except Exception as e:
-    # If import fails, create error routes
+    # If import fails, create a minimal Flask app with error handler
     import traceback
-    error_msg = str(e)
-    error_type = type(e).__name__
-    error_traceback = traceback.format_exc()
+    app = Flask(__name__)
+    
+    error_details = {
+        'error': 'Backend import failed',
+        'message': str(e),
+        'type': type(e).__name__,
+        'project_root': project_root,
+        'current_dir': current_dir,
+        'traceback': traceback.format_exc()
+    }
     
     @app.route('/', defaults={'path': ''})
     @app.route('/<path:path>')
     def error_handler(path):
         return jsonify({
-            'error': 'Backend import failed',
-            'message': error_msg,
-            'type': error_type,
-            'path': path,
-            'project_root': project_root,
-            'current_dir': current_dir,
-            'sys_path': sys.path[:5],  # First 5 entries only
-            'traceback': error_traceback
+            **error_details,
+            'requested_path': path
         }), 500
     
-    print(f"Failed to import backend app: {error_msg}")
+    print(f"Failed to import backend app: {e}")
 
-# Vercel Python runtime expects the handler to be the Flask app
-# This MUST be defined for Vercel to recognize the function
+# CRITICAL: Vercel requires 'handler' to be defined
+# This MUST be the Flask app (WSGI application)
 handler = app
